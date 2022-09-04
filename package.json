@@ -1,0 +1,16 @@
+{
+  "name": "dsa-compound-v3-managers",
+  "license": "UNLICENSED",
+  "scripts": {
+    "codegen": "graph codegen",
+    "build": "graph build",
+    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ richa-iitr/dsa-compound-v3-managers",
+    "create-local": "graph create --node http://localhost:8020/ richa-iitr/dsa-compound-v3-managers",
+    "remove-local": "graph remove --node http://localhost:8020/ richa-iitr/dsa-compound-v3-managers",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 richa-iitr/dsa-compound-v3-managers"
+  },
+  "dependencies": {
+    "@graphprotocol/graph-cli": "0.30.0",
+    "@graphprotocol/graph-ts": "0.27.0"
+  }
+}
