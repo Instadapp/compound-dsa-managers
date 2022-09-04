@@ -1,15 +1,24 @@
 type Owner @entity {
+  # address of the owner.
   id: ID!
+  # address of the owner.
   address: Bytes!
+  # lists of all enabled and disabled managers.
   manager: [Manager!]! @derivedFrom(field: "owner")
 }
 
 type Manager @entity {
+  # manager address + "#" + owner address.
   id: ID!
+  # address of the manager.
   address: Bytes!
+  # owner of the manager.
   owner: Owner!
+  # whether the manager is enabled or disabled by the owner.
   isAllowed: Boolean!
+  # whether the manager is DSA or not.
   isDSA: Boolean!
+  # transction details of the transaction when manager enabled or disabled. 
   transactionData: TransactionData!
 }
 
