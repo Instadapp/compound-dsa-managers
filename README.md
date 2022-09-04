@@ -15,11 +15,13 @@ graph build --network mainnet
   owners {
     id
     address
+    market
     manager {
       id
       address
       isAllowed
       isDSA
+      market
       transactionData {
         id
         txnIndex
