@@ -1,14 +1,16 @@
 type Owner @entity {
-  # address of the owner.
+  # address of the owner + "#" + market Address.
   id: ID!
   # address of the owner.
   address: Bytes!
+  # compound market address
+  market: Bytes!
   # lists of all enabled and disabled managers.
   manager: [Manager!]! @derivedFrom(field: "owner")
 }
 
 type Manager @entity {
-  # manager address + "#" + owner address.
+  # manager address + "#" + owner address + "#" + market address.
   id: ID!
   # address of the manager.
   address: Bytes!
@@ -18,12 +20,14 @@ type Manager @entity {
   isAllowed: Boolean!
   # whether the manager is DSA or not.
   isDSA: Boolean!
+  # compound market address
+  market: Bytes!
   # transction details of the transaction when manager enabled or disabled. 
   transactionData: TransactionData!
 }
 
 type TransactionData @entity {
-  # transaction hash
+  # transaction hash + "#" + log index
   id: ID!
   # transaction index
   txnIndex: BigInt!
