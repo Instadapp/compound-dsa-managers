@@ -1,6 +1,41 @@
-type ExampleEntity @entity {
+type Owner @entity {
   id: ID!
-  count: BigInt!
-  previousAdmin: Bytes! # address
-  newAdmin: Bytes! # address
+  address: Bytes!
+  manager: [Manager!]! @derivedFrom(field: "owner")
+}
+
+type Manager @entity {
+  id: ID!
+  address: Bytes!
+  owner: Owner!
+  isAllowed: Boolean!
+  isDSA: Boolean!
+  transactionData: TransactionData!
+}
+
+type TransactionData @entity {
+  # transaction hash
+  id: ID!
+  # transaction index
+  txnIndex: BigInt!
+  # transaction log index
+  txnLogIndex: BigInt!
+  # from
+  from: Bytes!
+  # to
+  to: Bytes
+  # input
+  input: Bytes!
+  # block number
+  blockNumber: BigInt!
+  # timestamp
+  timestamp: BigInt!
+  # gas
+  blockGasUsed: BigInt!
+  #gas price
+  gasPrice: BigInt!
+  # gas limit
+  gasLimit: BigInt!
+  #value
+  value: BigInt!
 }

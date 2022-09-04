@@ -1,29 +1,28 @@
-specVersion: 0.0.1
+specVersion: 0.0.5
 schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum
-    name: undefined
+    name: cUSDCv3
     network: mainnet
     source:
       address: "0xc3d688B66703497DAA19211EEdff47f25384cdc3"
       abi: cUSDCv3
+      startBlock: 15331500
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
-        - AdminChanged
-        - BeaconUpgraded
-        - Upgraded
+        - Owner
+        - Manager
+        - Transaction
       abis:
         - name: cUSDCv3
           file: ./abis/cUSDCv3.json
+        - name: InstaList
+          file: ./abis/InstaList.json
       eventHandlers:
-        - event: AdminChanged(address,address)
-          handler: handleAdminChanged
-        - event: BeaconUpgraded(indexed address)
-          handler: handleBeaconUpgraded
-        - event: Upgraded(indexed address)
-          handler: handleUpgraded
-      file: ./src/c-usd-cv-3.ts
+        - event: Approval(indexed address,indexed address,uint256)
+          handler: handleManagerToggled
+      file: ./src/compound-v3-managers.ts
