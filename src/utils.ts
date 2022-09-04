@@ -26,6 +26,7 @@ export function createOrLoadOwner(id: string): Owner {
   if (account == null) {
     account = new Owner(id);
     account.address = new Address(0);
+    account.market = new Address(0);
   }
   return account;
 }
@@ -36,6 +37,7 @@ export function createOrLoadManager(id: string): Manager {
   if (account == null) {
     account = new Manager(id);
     account.address = new Address(0);
+    account.market = new Address(0);
     account.owner = "";
     account.isAllowed = false;
     account.isDSA = false;
