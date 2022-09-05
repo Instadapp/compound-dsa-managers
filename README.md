@@ -12,7 +12,7 @@ graph build --network mainnet
 
 <pre>
 {
-  owners {
+  owners{
     id
     address
     market
@@ -25,7 +25,6 @@ graph build --network mainnet
       transactionData {
         id
         txnIndex
-        txnLogIndex
         from
         to
         input
