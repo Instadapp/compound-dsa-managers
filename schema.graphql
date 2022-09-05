@@ -31,8 +31,6 @@ type TransactionData @entity {
   id: ID!
   # transaction index
   txnIndex: BigInt!
-  # transaction log index
-  txnLogIndex: BigInt!
   # from
   from: Bytes!
   # to
