@@ -22,7 +22,9 @@ dataSources:
           file: ./abis/cUSDCv3.json
         - name: InstaList
           file: ./abis/InstaList.json
-      eventHandlers:
-        - event: Approval(indexed address,indexed address,uint256)
-          handler: handleManagerToggled
+      callHandlers:
+        - function: allow(address,bool)
+          handler: handleManagerToggledByAllow
+        - function: allowBySig(address,address,bool,uint256,uint256,uint8,bytes32,bytes32)
+          handler: handleManagerToggledByPermit
       file: ./src/compound-v3-managers.ts

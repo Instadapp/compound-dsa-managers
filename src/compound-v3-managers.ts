@@ -1,40 +1,88 @@
 import {
   cUSDCv3,
-  Approval
-} from "../generated/cUSDCv3/cUSDCv3"
-import { createOrLoadManager, createOrLoadOwner, createOrLoadTransaction, isDSA, ZERO } from "./utils";
+  Approval,
+  AllowCall,
+  AllowBySigCall,
+} from "../generated/cUSDCv3/cUSDCv3";
+import {
+  createOrLoadManager,
+  createOrLoadOwner,
+  createOrLoadTransaction,
+  isDSA,
+  ZERO,
+} from "./utils";
 
-export function handleManagerToggled(event: Approval): void {
-  let ownerID = event.params.owner.toHexString() + "#" + event.address.toHexString();
-  let managerID = event.params.spender.toHexString() + "#" + event.params.owner.toHexString() + "#" + event.address.toHexString();
-  let transactionID = event.transaction.hash.toHexString() +  "#" + event.logIndex.toString();
+export function handleManagerToggledByAllow(call: AllowCall): void {
+  let ownerID =
+    call.transaction.from.toHexString() + "#" + call.to.toHexString();
+  let managerID = call.inputs.manager.toHexString() + "#" + ownerID;
+  let transactionID =
+    call.transaction.hash.toHexString() +
+    "#" +
+    call.transaction.index.toString();
 
   let transactionData = createOrLoadTransaction(transactionID);
-  transactionData.txnIndex = event.transaction.index;
-  transactionData.txnLogIndex = event.transactionLogIndex;
-  transactionData.from = event.transaction.from;
-  transactionData.to = event.transaction.to;
-  transactionData.input = event.transaction.input;
-  transactionData.blockNumber = event.block.number;
-  transactionData.timestamp = event.block.timestamp;
-  transactionData.gasLimit = event.block.gasLimit;
-  transactionData.blockGasUsed = event.block.gasUsed;
-  transactionData.gasPrice = event.transaction.gasPrice;
-  transactionData.value = event.transaction.value;
-  
+  transactionData.txnIndex = call.transaction.index;
+  transactionData.from = call.transaction.from;
+  transactionData.to = call.to;
+  transactionData.input = call.transaction.input;
+  transactionData.blockNumber = call.block.number;
+  transactionData.timestamp = call.block.timestamp;
+  transactionData.gasLimit = call.block.gasLimit;
+  transactionData.blockGasUsed = call.block.gasUsed;
+  transactionData.gasPrice = call.transaction.gasPrice;
+  transactionData.value = call.transaction.value;
+
   let manager = createOrLoadManager(managerID);
-  manager.address = event.params.spender;
-  manager.isAllowed = event.params.amount == ZERO ? false : true;
+  manager.address = call.inputs.manager;
+  manager.isAllowed = call.inputs.isAllowed_;
   manager.owner = ownerID;
-  manager.market = event.address;
-  manager.isDSA = isDSA(event.params.spender);
+  manager.market = call.to;
+  manager.isDSA = isDSA(call.inputs.manager);
   manager.transactionData = transactionID;
 
   let owner = createOrLoadOwner(ownerID);
-  owner.address = event.params.owner;
-  owner.market = event.address;
+  owner.address = call.transaction.from;
+  owner.market = call.to;
 
   transactionData.save();
   manager.save();
-  owner.save();  
+  owner.save();
+}
+
+export function handleManagerToggledByPermit(call: AllowBySigCall): void {
+  let ownerID = call.inputs.owner.toHexString() + "#" + call.to.toHexString();
+  let managerID = call.inputs.manager.toHexString() + "#" + ownerID;
+  let transactionID =
+    call.transaction.hash.toHexString() +
+    "#" +
+    call.transaction.index.toString();
+
+  let transactionData = createOrLoadTransaction(transactionID);
+  transactionData.txnIndex = call.transaction.index;
+  transactionData.from = call.transaction.from;
+  transactionData.to = call.to;
+  transactionData.input = call.transaction.input;
+  transactionData.blockNumber = call.block.number;
+  transactionData.timestamp = call.block.timestamp;
+  transactionData.gasLimit = call.block.gasLimit;
+  transactionData.blockGasUsed = call.block.gasUsed;
+  transactionData.gasPrice = call.transaction.gasPrice;
+  transactionData.value = call.transaction.value;
+
+  let manager = createOrLoadManager(managerID);
+  manager.address = call.inputs.manager;
+  manager.isAllowed = call.inputs.isAllowed_;
+  manager.owner = ownerID;
+  manager.market = call.to;
+  manager.isDSA = isDSA(call.inputs.manager);
+  manager.transactionData = transactionID;
+
+  let owner = createOrLoadOwner(ownerID);
+  owner.address = call.inputs.owner;
+  owner.market = call.to;
+
+  transactionData.save();
+  manager.save();
+  owner.save();
 }

@@ -52,7 +52,6 @@ export function createOrLoadTransaction(id: string): TransactionData {
   if (txn == null) {
     txn = new TransactionData(id);
     txn.txnIndex = ZERO;
-    txn.txnLogIndex = ZERO;
     txn.from = new Address(0);
     txn.to = new Address(0);
     txn.input = new Bytes(0);
